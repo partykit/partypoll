@@ -1,0 +1,5 @@
+{
+  "name": "partypolls",
+  "main": "party/index.ts",
+  "compatibilityDate": "2023-10-10"
+}
