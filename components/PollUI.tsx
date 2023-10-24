@@ -51,7 +51,7 @@ export default function PollUI({
       if (message.votes) {
         setVotes(message.votes);
       }
-      if (message.ownVote) {
+      if (message.ownVote !== undefined) {
         setVote(message.ownVote);
       }
     },
