@@ -1,17 +1,17 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import type { User } from "@/party/utils/auth";
 import GitHubProvider from "next-auth/providers/github";
 
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_SECRET = process.env.GITHUB_SECRET;
+const AUTH_ENABLED = false;
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID!;
+const GITHUB_SECRET = process.env.GITHUB_SECRET!;
 
-if (!GITHUB_CLIENT_ID)
+if (AUTH_ENABLED && !GITHUB_CLIENT_ID)
   throw new Error("GITHUB_CLIENT_ID not defined in environment");
 
-if (!GITHUB_SECRET)
+if (AUTH_ENABLED && !GITHUB_SECRET)
   throw new Error("GITHUB_CLIENT_SECRET not defined in environment");
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: GITHUB_CLIENT_ID,
@@ -28,27 +28,6 @@ export const authOptions: NextAuthOptions = {
     },
     signIn(params) {
       return true;
-    },
-
-    session({ session, token, user }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          username: token.username,
-        } as User,
-      };
-    },
-
-    jwt({ token, profile, trigger }) {
-      const username =
-        profile && "login" in profile ? profile.login : profile?.email;
-
-      if (trigger === "signIn") {
-        return { ...token, username };
-      }
-
-      return token;
     },
   },
 };
