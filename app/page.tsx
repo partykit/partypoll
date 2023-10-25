@@ -4,7 +4,6 @@ import Balloon from "@/components/Balloon";
 import { Poll } from "@/app/types";
 import { redirect } from "next/navigation";
 import { PARTYKIT_URL } from "./env";
-import Input from "@/components/Input";
 
 const randomId = () => Math.random().toString(36).substring(2, 10);
 
