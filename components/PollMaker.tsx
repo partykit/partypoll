@@ -4,6 +4,9 @@ import { useRef, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 
+const MIN_OPTIONS = 2;
+const MAX_OPTIONS = 8;
+
 export default function PollMaker() {
   const [newOption, setNewOption] = useState<string>("");
   const [title, setTitle] = useState("");
@@ -16,9 +19,10 @@ export default function PollMaker() {
     }
   };
 
+  const canAdd = options.length < MAX_OPTIONS;
   const canSubmit =
     title.length > 0 &&
-    options.length >= 2 &&
+    options.length >= MIN_OPTIONS &&
     options.filter((option) => option.trim().length === 0).length === 0;
 
   return (
@@ -43,26 +47,28 @@ export default function PollMaker() {
             <Input type="text" name={`option-${i}`} defaultValue={value} />
           </li>
         ))}
-        <li className="flex space-x-4">
-          <Input
-            ref={newOptionRef}
-            type="text"
-            placeholder="New option"
-            value={newOption}
-            onChange={(e) => setNewOption(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                if (newOption.length > 0) {
-                  addNewOption();
+        {canAdd && (
+          <li className="flex space-x-4">
+            <Input
+              ref={newOptionRef}
+              type="text"
+              placeholder="New option"
+              value={newOption}
+              onChange={(e) => setNewOption(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  if (newOption.length > 0) {
+                    addNewOption();
+                  }
                 }
-              }
-            }}
-          />
-          <Button theme="light" onClick={addNewOption}>
-            Add
-          </Button>
-        </li>
+              }}
+            />
+            <Button theme="light" onClick={addNewOption}>
+              Add
+            </Button>
+          </li>
+        )}
       </ul>
       <Button type="submit" disabled={!canSubmit}>
         Create poll
