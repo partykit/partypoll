@@ -10,9 +10,16 @@ export default function PollMaker() {
   const [options, setOptions] = useState<string[]>([]);
   const newOptionRef = useRef<HTMLInputElement>(null);
   const addNewOption = () => {
-    setOptions((prevOptions) => [...prevOptions, newOption]);
-    setNewOption("");
+    if (newOption?.trim().length !== 0) {
+      setOptions((prevOptions) => [...prevOptions, newOption]);
+      setNewOption("");
+    }
   };
+
+  const canSubmit =
+    title.length > 0 &&
+    options.length >= 2 &&
+    options.filter((option) => option.trim().length === 0).length === 0;
 
   return (
     <>
@@ -52,12 +59,12 @@ export default function PollMaker() {
               }
             }}
           />
-          <Button type="submit" theme="light" onClick={addNewOption}>
+          <Button theme="light" onClick={addNewOption}>
             Add
           </Button>
         </li>
       </ul>
-      <Button type="submit" disabled={title.length === 0 || options.length < 2}>
+      <Button type="submit" disabled={!canSubmit}>
         Create poll
       </Button>
     </>
