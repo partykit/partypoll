@@ -40,3 +40,32 @@ export default async function PollPage({
     </>
   );
 }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { poll_id: string };
+}) {
+  const attrs = {
+    title: "A live poll created using PartyKit!",
+    cta: "Vote now!",
+  };
+
+  try {
+    const req = await fetch(`${PARTYKIT_URL}/party/${params.poll_id}`);
+    if (req.ok) {
+      const res = await req.json();
+      if (res.title) {
+        attrs.title = res.title;
+      }
+    }
+  } catch (e) {
+    console.error("Failed to generate metadata for poll page", e);
+  }
+
+  return {
+    openGraph: {
+      images: [`/api/og?${new URLSearchParams(attrs)}`],
+    },
+  };
+}

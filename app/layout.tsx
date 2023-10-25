@@ -5,9 +5,17 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const openGraphImage = {
+  title: "Instant, real-time polls built with PartyKit",
+  cta: "Create your own poll now",
+};
+
 export const metadata: Metadata = {
   title: "Party poll!",
   description: "Voting's better with friends 🎈",
+  openGraph: {
+    images: [`/api/og?${new URLSearchParams(openGraphImage)}`],
+  },
 };
 
 export default function RootLayout({

@@ -21,7 +21,7 @@ export default function Footer() {
         |{" "}
         <a
           className="underline"
-          href="https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app/1-what-you-will-build/"
+          href="https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app"
           target="_blank"
         >
           Tutorial
