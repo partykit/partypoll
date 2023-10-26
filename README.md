@@ -2,7 +2,7 @@ PartyKit is an open source platform for developing multiplayer, real-time applic
 
 This is a [PartyKit](https://partykit.io) project using [Next.js](https://nextjs.org/).
 
-- [Live site](https://partypoll.vercel.app/)
+- [Live Next.js site on Vercel](https://partypoll.vercel.app/)
 - [Step-by-step tutorial on PartyKit Docs](https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app/)
 
 ## Getting Started
