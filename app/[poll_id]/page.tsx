@@ -37,6 +37,11 @@ export default async function PollPage({
       </div>
 
       <Balloon float />
+      <div className="font-medium text-lg pt-8 text-center">
+        <a className="underline" href="/">
+          Create your own poll!
+        </a>
+      </div>
     </>
   );
 }

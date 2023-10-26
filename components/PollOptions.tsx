@@ -35,19 +35,17 @@ export default function PollOptions({
               }}
             ></div>
 
-            <div className="select-none w-full flex items-center justify-between px-4 py-2 z-20">
+            <div className="select-none w-full flex items-center justify-between px-4 z-20">
               <button
                 onClick={() => setVote(i)}
-                className={`flex-shrink flex text-left ${
+                className={`flex flex-1 text-left py-2 ${
                   vote === null ? "cursor-pointer" : "cursor-default"
                 } ${
                   vote === null ? "" : votes[i] === mostVotes ? "font-bold" : ""
                 }`}
               >
                 <span>
-                  {vote === i && (
-                    <span className="text-xl relative top-1">🎈 </span>
-                  )}
+                  {vote === i && <span className="relative">🎈 </span>}
                   {option}
                 </span>
               </button>
