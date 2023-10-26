@@ -4,10 +4,11 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
+    <div className="flex flex-col space-y-2">
+      <h2 className="text-2xl font-bold">Not Found</h2>
+      <Link className="underline" href="/">
+        Return Home
+      </Link>
     </div>
   );
 }

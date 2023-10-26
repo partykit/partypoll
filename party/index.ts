@@ -11,6 +11,7 @@ export default class Server implements Party.Server {
   async onRequest(req: Party.Request) {
     if (req.method === "DELETE") {
       if (this.party.env.PARTY_SECRET === req.headers.get("Authorization")) {
+        this.notifyPollDeleted();
         this.poll = undefined;
         await this.party.storage.deleteAll();
         return new Response(JSON.stringify({ deleted: this.party.id }));
@@ -64,7 +65,11 @@ export default class Server implements Party.Server {
     return this.notifyPollTracker("PUT");
   }
 
-  async notifyPollTracker(method: "POST" | "PUT") {
+  async notifyPollDeleted() {
+    return this.notifyPollTracker("DELETE");
+  }
+
+  async notifyPollTracker(method: "POST" | "PUT" | "DELETE") {
     this.party.context.parties.polls.get(SINGLETON_ROOM_ID).fetch({
       method,
       headers: {

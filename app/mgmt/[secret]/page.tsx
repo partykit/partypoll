@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { PARTYKIT_URL } from "@/app/env";
 import { PollWithMetadata } from "@/party/polls";
+import PollList from "./PollList";
 
 const PARTY_SECRET = process.env.PARTY_SECRET;
-
-const sum = (arr?: number[]) => arr?.reduce((a, b) => a + b, 0) ?? 0;
 
 export default async function ManagementPage({
   params,
@@ -33,25 +32,11 @@ export default async function ManagementPage({
     }
   }
 
-  const poll = (await req.json()) as Record<string, PollWithMetadata>;
+  const polls = (await req.json()) as Record<string, PollWithMetadata>;
 
   return (
     <>
-      <div className="flex flex-col space-y-4">
-        <ul>
-          {Object.values(poll).map((poll) => (
-            <li key={poll.id} className="grid grid-cols-2">
-              <span>
-                <a className="underline" href={`/${poll.id}`}>
-                  {poll.title}
-                </a>
-                <span> ({sum(poll.votes)} votes)</span>
-              </span>
-              <span>{new Date(poll.created!).toLocaleString()}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <PollList initialPolls={polls} />
     </>
   );
 }

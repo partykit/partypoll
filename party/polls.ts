@@ -23,6 +23,36 @@ export default class PollList implements Party.Server {
 
   constructor(public party: Party.Party) {}
 
+  async getRoomList() {
+    const items = await this.party.storage.list({
+      prefix: "poll:",
+      limit: 1000,
+      reverse: true,
+    });
+
+    return Object.fromEntries(items.entries());
+  }
+
+  async broadcast(
+    action: "create" | "update" | "delete",
+    id: string,
+    poll?: PollWithMetadata
+  ) {
+    // if anyone is listening, broadcast the new list
+    for (const _ of this.party.getConnections()) {
+      this.party.broadcast(
+        JSON.stringify({
+          id,
+          action,
+          update: {
+            [id]: poll ?? null,
+          },
+        })
+      );
+      break;
+    }
+  }
+
   async onRequest(req: Party.Request) {
     if (req.headers.get("Authorization") !== this.party.env.PARTY_SECRET) {
       return new Response("Unauthorized", { status: 401 });
@@ -35,6 +65,13 @@ export default class PollList implements Party.Server {
           // store data in a time-sortable key so we can get most recent first
           const ts = Date.now();
           const id = `poll:${ts}:${room.id}`;
+          const poll = {
+            ...room.poll,
+            id: room.id,
+            created: ts,
+            updated: ts,
+          };
+
           this.party.storage.put<PollWithMetadata>(id, {
             ...room.poll,
             id: room.id,
@@ -44,7 +81,7 @@ export default class PollList implements Party.Server {
 
           // store the id so we can access by id if needed
           this.party.storage.put(room.id, id);
-
+          this.broadcast("create", id, poll);
           return new Response(JSON.stringify({ id }), {
             headers: { "Content-Type": "application/json" },
           });
@@ -65,6 +102,7 @@ export default class PollList implements Party.Server {
               poll.votes = room.poll.votes;
               poll.updated = ts;
               await this.party.storage.put(id, poll);
+              this.broadcast("update", id, poll);
             }
 
             return new Response(JSON.stringify({ id }), {
@@ -74,15 +112,20 @@ export default class PollList implements Party.Server {
         }
       }
 
-      if (req.method === "GET") {
-        const items = await this.party.storage.list({
-          prefix: "poll:",
-          limit: 1000,
-          reverse: true,
-        });
+      if (req.method === "DELETE") {
+        const room = (await req.json()) as Room;
+        if (room.id && room.poll) {
+          const id = await this.party.storage.get<string>(room.id);
+          if (id) {
+            this.party.storage.delete(id);
+            this.party.storage.delete(room.id);
+            this.broadcast("delete", id);
+          }
+        }
+      }
 
-        const polls = Object.fromEntries(items.entries());
-        return new Response(JSON.stringify(polls), {
+      if (req.method === "GET") {
+        return new Response(JSON.stringify(await this.getRoomList()), {
           headers: { "Content-Type": "application/json" },
         });
       }
