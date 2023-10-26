@@ -52,6 +52,7 @@ export default function PollMaker() {
             <Input
               ref={newOptionRef}
               type="text"
+              name="option-new"
               placeholder="New option"
               value={newOption}
               onChange={(e) => setNewOption(e.target.value)}
