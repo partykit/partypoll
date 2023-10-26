@@ -16,7 +16,7 @@ export default function Home() {
     const options: string[] = [];
 
     for (const [key, value] of formData.entries()) {
-      if (key.startsWith("option-") && value.length > 0) {
+      if (key.startsWith("option-") && value.toString().trim().length > 0) {
         options.push(value.toString());
       }
     }
