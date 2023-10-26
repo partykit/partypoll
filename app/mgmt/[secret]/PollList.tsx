@@ -42,8 +42,8 @@ function ListItem({ poll }: { poll: PollWithMetadata }) {
       <span>{new Date(poll.created!).toLocaleString()}</span>
       <span>
         {sure ? (
-          <button className="underline text-red-500" onDoubleClick={deletePoll}>
-            Double click to confirm
+          <button className="underline text-red-500" onClick={deletePoll}>
+            Click to confirm
           </button>
         ) : (
           <button className="underline" onClick={() => setSure(true)}>
