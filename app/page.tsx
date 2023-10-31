@@ -12,7 +12,7 @@ export default function Home() {
   async function createPoll(formData: FormData) {
     "use server";
 
-    const title = formData.get("title")?.toString() ?? "Anonymous poll";
+    const title = formData.get("title")?.toString() || "Anonymous poll";
     const options: string[] = [];
 
     for (const [key, value] of formData.entries()) {
